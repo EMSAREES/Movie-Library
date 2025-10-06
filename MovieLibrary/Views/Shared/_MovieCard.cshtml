@@ -1,0 +1,20 @@
+﻿@model MovieLibrary.Models.Movie
+
+<div class="col">
+    <a href="@Url.Action("Details", "Movie", new { id = Model.Id })" class="text-decoration-none text-reset">
+        <div class="movie-card">
+            <img src="@Model.PosterPath" class="movie-poster" alt="@Model.Title">
+            <div class="p-3">
+                <div class="movie-title">@Model.Title</div>
+                <div class="overview">@Model.Overview</div>
+
+                <div class="genres mt-2">
+                    @foreach (var genreName in Model.GenreNames)
+                    {
+                        <span class="badge bg-secondary me-1">@genreName</span>
+                    }
+                </div>
+            </div>
+        </div>
+    </a>
+</div>

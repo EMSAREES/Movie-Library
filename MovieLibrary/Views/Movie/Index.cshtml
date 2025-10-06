@@ -1,0 +1,37 @@
+﻿@model List<MovieLibrary.Models.Movie>
+@{
+    ViewData["Title"] = "Inicio";
+
+    @if (!Model.Any())
+    {
+        <div class="text-center my-5">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+        </div>
+    }
+}
+
+<h2 class="container-title">Películas Populares</h2>
+
+@* Agrupar películas por año *@
+@{
+    var moviesByYear = Model
+        .OrderByDescending(m => m.ReleaseDate)
+        .GroupBy(m => !string.IsNullOrEmpty(m.ReleaseDate) ? m.ReleaseDate.Substring(0, 4) : "Sin año")
+        .ToList();
+}
+
+@foreach (var yearGroup in moviesByYear)
+{
+    <h3 class="mt-4">@yearGroup.Key</h3>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        @foreach (var movie in yearGroup)
+        {
+            @Html.Partial("_MovieCard", movie)
+        }
+    </div>
+}
+
+
+

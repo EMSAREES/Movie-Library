@@ -1,0 +1,49 @@
+﻿@model MovieLibrary.Models.MoviesViewModel
+
+<h2>Buscar Películas</h2>
+
+<form method="get" class="mb-4 d-flex gap-2">
+    <input type="text" name="query" class="form-control" placeholder="Buscar por título..."
+           value="@Model.Query" />
+    <input type="number" name="year" class="form-control"
+           value="@(Model.Year.ToString() )"
+           min="1900" max="2100" />
+
+
+    <select name="genreId" class="form-select">
+        <option value="">-- Todas las categorías --</option>
+        @foreach (var genre in Model.Genres)
+        {
+            if (genre.Key == Model.SelectedGenreId)
+            {
+                <option value="@genre.Key" selected>@genre.Value</option>
+            }
+            else
+            {
+                <option value="@genre.Key">@genre.Value</option>
+            }
+        }
+    </select>
+
+
+    <button class="btn btn-primary" type="submit">Buscar</button>
+</form>
+
+@* Mostrar películas agrupadas por año *@
+@{
+    var moviesByYear = Model.Movies
+        .OrderByDescending(m => m.ReleaseDate)
+        .GroupBy(m => !string.IsNullOrEmpty(m.ReleaseDate) ? m.ReleaseDate.Substring(0, 4) : "Sin año")
+        .ToList();
+}
+
+@foreach (var yearGroup in moviesByYear)
+{
+    <h3>@yearGroup.Key</h3>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        @foreach (var movie in yearGroup)
+        {
+            @Html.Partial("_MovieCard", movie)
+        }
+    </div>
+}
